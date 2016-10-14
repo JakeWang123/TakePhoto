@@ -57,6 +57,7 @@ public class TakePhotoActivity extends Activity implements TakePhoto.TakeResultL
     public TakePhoto getTakePhoto(){
         if (takePhoto==null){
             takePhoto= (TakePhoto) TakePhotoInvocationHandler.of(this).bind(new TakePhotoImpl(this,this));
+            takePhoto.onEnableCorrect(true);
         }
         return takePhoto;
     }

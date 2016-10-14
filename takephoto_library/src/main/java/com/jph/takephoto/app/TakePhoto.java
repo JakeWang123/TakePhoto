@@ -96,6 +96,11 @@ public interface TakePhoto {
      * @param showCompressDialog 压缩时是否显示进度对话框
      */
     void onEnableCompress(CompressConfig config,boolean showCompressDialog);
+    /**
+     * 启用图片角度纠正
+     * @param enableCorrect 图片角度纠正
+     */
+    void onEnableCorrect(boolean enableCorrect);
     void onCreate(Bundle savedInstanceState);
     void onSaveInstanceState(Bundle outState);
     /**

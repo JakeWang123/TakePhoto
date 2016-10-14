@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.jph.takephoto.R;
@@ -18,6 +19,7 @@ import com.jph.takephoto.compress.CompressImageImpl;
 import com.jph.takephoto.model.CropOptions;
 import com.jph.takephoto.model.MultipleCrop;
 import com.jph.takephoto.model.TContextWrap;
+import com.jph.takephoto.model.TException;
 import com.jph.takephoto.model.TExceptionType;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TIntentWap;
@@ -26,7 +28,6 @@ import com.jph.takephoto.permission.PermissionManager;
 import com.jph.takephoto.uitl.ImageRotateUtil;
 import com.jph.takephoto.uitl.IntentUtils;
 import com.jph.takephoto.uitl.TConstant;
-import com.jph.takephoto.model.TException;
 import com.jph.takephoto.uitl.TImageFiles;
 import com.jph.takephoto.uitl.TUriParse;
 import com.jph.takephoto.uitl.TUtils;
@@ -63,6 +64,7 @@ public class TakePhotoImpl implements TakePhoto {
     private Uri tempUri;
     private CropOptions cropOptions;
     private CompressConfig compressConfig;
+    private boolean enableCorrect;
     private MultipleCrop multipleCrop;
     private PermissionManager.TPermissionType permissionType;
     /**
@@ -154,6 +156,7 @@ public class TakePhotoImpl implements TakePhoto {
                 break;
             case TConstant.RC_PICK_PICTURE_FROM_CAPTURE_CROP://拍取照片,并裁剪
                 if (resultCode == Activity.RESULT_OK) {
+                    if(enableCorrect)
                     ImageRotateUtil.of().correctImage(contextWrap.getActivity(),tempUri);
                     try {
                         onCrop(tempUri,Uri.fromFile(new File(TUriParse.parseOwnUri(contextWrap.getActivity(),outPutUri))), cropOptions);
@@ -167,6 +170,7 @@ public class TakePhotoImpl implements TakePhoto {
                 break;
             case TConstant.RC_PICK_PICTURE_FROM_CAPTURE://拍取照片
                 if (resultCode == Activity.RESULT_OK) {
+                    if(enableCorrect)
                     ImageRotateUtil.of().correctImage(contextWrap.getActivity(),outPutUri);
                     try {
                         takeResult(TResult.of(TImage.of(TUriParse.getFilePathWithUri(outPutUri, contextWrap.getActivity()))));
@@ -379,6 +383,11 @@ public class TakePhotoImpl implements TakePhoto {
     public void onEnableCompress(CompressConfig config, boolean showCompressDialog) {
         this.compressConfig = config;
         this.showCompressDialog = showCompressDialog;
+    }
+
+    @Override
+    public void onEnableCorrect(boolean enableCorrect) {
+        this.enableCorrect =enableCorrect;
     }
 
     @Override
